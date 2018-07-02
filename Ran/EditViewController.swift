@@ -1,22 +1,22 @@
 //
-//  InformationViewController.swift
+//  EditViewController.swift
 //  Ran
 //
-//  Created by 平岡 建 on 2018/06/26.
+//  Created by 平岡 建 on 2018/07/02.
 //  Copyright © 2018年 平岡 建. All rights reserved.
 //
 
 import UIKit
 
-class InfomationViewController: UIViewController {
+class EditViewController: UIViewController {
 
     @IBOutlet weak var photoImageButton: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
     }
-    
+
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         
@@ -39,4 +39,16 @@ class InfomationViewController: UIViewController {
     private func setImage(_ image: UIImage) {
         photoImageButton.setImage(image, for: UIControlState())
     }
+    
+    
+    /*
+    // MARK: - Navigation
+
+    // In a storyboard-based application, you will often want to do a little preparation before navigation
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        // Get the new view controller using segue.destinationViewController.
+        // Pass the selected object to the new view controller.
+    }
+    */
+
 }

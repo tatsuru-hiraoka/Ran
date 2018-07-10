@@ -14,14 +14,9 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
     var detailViewController: DetailViewController? = nil
     var managedObjectContext: NSManagedObjectContext? = nil
 
-
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
         navigationItem.leftBarButtonItem = editButtonItem
-
-//        let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(insertNewObject(_:)))
-//        navigationItem.rightBarButtonItem = addButton
         if let split = splitViewController {
             let controllers = split.viewControllers
             detailViewController = (controllers[controllers.count-1] as! UINavigationController).topViewController as? DetailViewController
@@ -35,27 +30,7 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
-
-//    @objc
-//    func insertNewObject(_ sender: Any) {
-//        let context = self.fetchedResultsController.managedObjectContext
-//        let newEvent = Event(context: context)
-//
-//        // If appropriate, configure the new managed object.
-//        newEvent.timestamp = Date()
-//
-//        // Save the context.
-//        do {
-//            try context.save()
-//        } catch {
-//            // Replace this implementation with code to handle the error appropriately.
-//            // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-//            let nserror = error as NSError
-//            fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
-//        }
-//    }
 
     // MARK: - Segues
 
@@ -111,7 +86,7 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
     }
 
     func configureCell(_ cell: UITableViewCell, withEvent event: Event) {
-        cell.textLabel!.text = event.timestamp!.description
+        //cell.textLabel!.text = event.timestamp!.description
     }
     
     // Cell の高さを120にする
@@ -133,7 +108,7 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         fetchRequest.fetchBatchSize = 20
         
         // Edit the sort key as appropriate.
-        let sortDescriptor = NSSortDescriptor(key: "timestamp", ascending: false)
+        let sortDescriptor = NSSortDescriptor(key: "artist", ascending: false)
         
         fetchRequest.sortDescriptors = [sortDescriptor]
         
@@ -197,6 +172,47 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
          tableView.reloadData()
      }
      */
-
+    
+    override func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let editAction = UIContextualAction(style: .normal,
+                                            title:  "編集",
+                                            handler: { (action: UIContextualAction, view: UIView, success :(Bool) -> Void) in
+                                                success(true)
+        })
+        editAction.image = UIImage(named: "edit")
+        editAction.backgroundColor = .blue
+        
+        let copyAction = UIContextualAction(style: .normal,
+                                            title: "コピー",
+                                            handler: { (action: UIContextualAction, view: UIView, success :(Bool) -> Void) in
+                                                success(true)
+        })
+        copyAction.image = UIImage(named: "copy")
+        
+        return UISwipeActionsConfiguration(actions: [editAction, copyAction])
+    }
+    
+    ///右から左へスワイプ
+    override func tableView(_ tableView: UITableView,
+                   trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        
+        let moveAction = UIContextualAction(style: .normal,
+                                            title:  "編集",
+                                            handler: { (action: UIContextualAction, view: UIView, success :(Bool) -> Void) in
+                                                success(true)
+        })
+        moveAction.image = UIImage(named: "edit")
+        moveAction.backgroundColor = .green
+        
+        let removeAction = UIContextualAction(style: .normal,
+                                              title: "削除",
+                                              handler: { (action: UIContextualAction, view: UIView, success :(Bool) -> Void) in
+                                                success(true)
+        })
+        removeAction.image = UIImage(named: "trash")
+        removeAction.backgroundColor = .red
+        
+        return UISwipeActionsConfiguration(actions: [removeAction, moveAction])
+    }
 }
 

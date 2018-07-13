@@ -11,8 +11,10 @@ import CoreData
 
 class MasterViewController: UITableViewController, NSFetchedResultsControllerDelegate {
 
+    
     var detailViewController: DetailViewController? = nil
     var managedObjectContext: NSManagedObjectContext? = nil
+    //var events:[Event] = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,6 +28,8 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
     override func viewWillAppear(_ animated: Bool) {
         clearsSelectionOnViewWillAppear = splitViewController!.isCollapsed
         super.viewWillAppear(animated)
+        //getData()
+        //tableView.reloadData()
     }
 
     override func didReceiveMemoryWarning() {
@@ -59,8 +63,9 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
     //セルに値を設定するデータソースメソッド（必須）
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
-        let event = fetchedResultsController.object(at: indexPath)
-        configureCell(cell, withEvent: event)
+        let event = fetchedResultsController.object(at: indexPath)//events[indexPath.row]//
+        let titleLabel:UILabel = cell.viewWithTag(2) as! UILabel
+        titleLabel.text = event.artist
         return cell
     }
 
@@ -77,8 +82,6 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
             do {
                 try context.save()
             } catch {
-                // Replace this implementation with code to handle the error appropriately.
-                // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
                 let nserror = error as NSError
                 fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
             }
@@ -121,8 +124,6 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         do {
             try _fetchedResultsController!.performFetch()
         } catch {
-             // Replace this implementation with code to handle the error appropriately.
-             // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development. 
              let nserror = error as NSError
              fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
         }
@@ -159,19 +160,30 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
                 tableView.moveRow(at: indexPath!, to: newIndexPath!)
         }
     }
-
+    //tebleViewを更新する
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         tableView.endUpdates()
     }
 
     /*
      // Implementing the above methods to update the table view in response to individual changes may have performance implications if a large number of changes are made simultaneously. If this proves to be an issue, you can instead just implement controllerDidChangeContent: which notifies the delegate that all section and object changes have been processed.
-     
-     func controllerDidChangeContent(controller: NSFetchedResultsController) {
-         // In the simplest, most efficient, case, reload the table view.
-         tableView.reloadData()
-     }
      */
+//    func controllerDidChangeContent(controller: NSFetchedResultsController<NSFetchRequestResult>) {
+//         // In the simplest, most efficient, case, reload the table view.
+//         tableView.reloadData()
+//     }
+ 
+//    func getData() {
+//        // データ保存時と同様にcontextを定義
+//        let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+//        do {
+//            // CoreDataからデータをfetchしてeventsに格納
+//            let fetchRequest: NSFetchRequest<Event> = Event.fetchRequest()
+//            events = try context.fetch(fetchRequest)
+//        } catch {
+//            print("Fetching Failed.")
+//        }
+//    }
     
     override func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let editAction = UIContextualAction(style: .normal,

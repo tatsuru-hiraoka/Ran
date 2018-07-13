@@ -8,9 +8,9 @@
 
 import UIKit
 import CoreData
+import Photos
 
-class InfomationViewController: UIViewController,UITextFieldDelegate, NSFetchedResultsControllerDelegate {
-    
+class InfomationViewController: UIViewController,UITextFieldDelegate, NSFetchedResultsControllerDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate{
     var managedContext: NSManagedObjectContext? = nil
     @IBOutlet weak var textfield: UITextField!
     @IBOutlet weak var scroll: UIScrollView!
@@ -23,6 +23,8 @@ class InfomationViewController: UIViewController,UITextFieldDelegate, NSFetchedR
             return
         }
         managedContext = appDelegate.persistentContainer.viewContext
+        
+        
     }
     
     override func didReceiveMemoryWarning() {
@@ -31,21 +33,37 @@ class InfomationViewController: UIViewController,UITextFieldDelegate, NSFetchedR
     }
     
     @IBAction func selectImage(_ sender: Any) {
-        PhotoRequestManager.requestPhotoLibrary(self){ [weak self] result in
-            switch result {
-            case .success(let image):
-                self?.setImage(image)
-            case .faild:
-                print("failed")
-            case .cancel:
-                break
+        PHPhotoLibrary.requestAuthorization { status in
+            switch status {
+            case .authorized: print("authorized")// 許可済み
+            let imagePicker:UIImagePickerController! = UIImagePickerController()
+            imagePicker.delegate = self
+            imagePicker.sourceType = UIImagePickerControllerSourceType.photoLibrary
+            self.present(imagePicker, animated: true, completion: nil)
+            case .denied: print("denied")// 明示的拒否（設定 -> プライバシー で利用が制限されている）
+                
+            case .notDetermined: print("NotDetermined")// 許可も拒否もしていない状態
+                
+            case .restricted: print("Restricted")// 利用制限（設定 -> 一般 -> 機能制限 で利用が制限されている）
             }
         }
     }
-    
-    // 取得した画像をセットするメソッド
-    private func setImage(_ image: UIImage) {
+    //画像が選択された時に呼ばれる.
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+        let image = info[UIImagePickerControllerOriginalImage] as? UIImage
+        let imageUrl = info[UIImagePickerControllerReferenceURL] as? URL
+        let imageUrl2 = info[UIImagePickerControllerPHAsset] as? PHAsset
+        
+        print("imageUrl", imageUrl as Any)
+        print("imageUrl2", imageUrl2 as Any)
+        //ボタンの背景に選択した画像を設定
         photoImageButton.setImage(image, for: UIControlState())
+        self.dismiss(animated: true, completion: nil)
+    }
+    
+    //画像選択がキャンセルされた時に呼ばれる.
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        self.dismiss(animated: true, completion: nil)
     }
     
     //完了を押すとkeyboardを閉じる処理
@@ -75,16 +93,17 @@ class InfomationViewController: UIViewController,UITextFieldDelegate, NSFetchedR
     }
     
     @IBAction func save(_ sender: Any) {
-        
-        let newManagedObject = NSEntityDescription.insertNewObject(forEntityName: "Event", into: managedContext!)
-        newManagedObject.setValue(textfield.text, forKey: "artist")
-        do {
-            try managedContext!.save()
-        }
-        catch {
-            let nserror = error as NSError
-            fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
-        }
+        let event = Event(context: managedContext!)
+        let artiststr = textfield.text
+        // 先ほど定義したTask型データのname、categoryプロパティに入力、選択したデータを代入します。
+        event.artist = artiststr
+        //Documentsディレクトリのpathを得る（返り値はArrayで、index0がそれ）
+        //let docPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
+        //StringにappendingPathComponentがないのでURLに変換
+        //        let fileURL = URL(fileURLWithPath: docPath).appendingPathComponent(artiststr!)
+        //        event.image =
+        // 上で作成したデータをデータベースに保存します。
+        (UIApplication.shared.delegate as! AppDelegate).saveContext()
         self.navigationController?.popViewController(animated: true)
     }
     @IBAction func cancel(_ sender: Any) {

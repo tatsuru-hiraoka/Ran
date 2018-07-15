@@ -119,6 +119,7 @@ class InfomationViewController: UIViewController,UITextFieldDelegate, NSFetchedR
             //do-catchを使ってるので書込みエラーが起きるとcatchに移ってくれる
             try imageData?.write(to: fileURL, options: .atomic)
             //書き込み成功時の処理
+            event.image = fileURL
         } catch let error {
            //書き込み失敗時の処理
             print("画像保存失敗 \(error)")

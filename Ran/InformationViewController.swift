@@ -12,6 +12,7 @@ import Photos
 
 class InfomationViewController: UIViewController,UITextFieldDelegate, NSFetchedResultsControllerDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate{
     var managedContext: NSManagedObjectContext? = nil
+    var image:UIImage?
     @IBOutlet weak var textfield: UITextField!
     @IBOutlet weak var scroll: UIScrollView!
     @IBOutlet weak var photoImageButton: UIButton!
@@ -25,6 +26,10 @@ class InfomationViewController: UIViewController,UITextFieldDelegate, NSFetchedR
         managedContext = appDelegate.persistentContainer.viewContext
         
         
+    }
+    
+    override func viewDidLayoutSubviews() {
+         scroll.contentSize = CGSize(width: 0, height: 1100)
     }
     
     override func didReceiveMemoryWarning() {
@@ -50,12 +55,12 @@ class InfomationViewController: UIViewController,UITextFieldDelegate, NSFetchedR
     }
     //画像が選択された時に呼ばれる.
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
-        let image = info[UIImagePickerControllerOriginalImage] as? UIImage
-        let imageUrl = info[UIImagePickerControllerReferenceURL] as? URL
-        let imageUrl2 = info[UIImagePickerControllerPHAsset] as? PHAsset
-        
-        print("imageUrl", imageUrl as Any)
-        print("imageUrl2", imageUrl2 as Any)
+        image = info[UIImagePickerControllerOriginalImage] as? UIImage
+//        let imageUrl = info[UIImagePickerControllerReferenceURL] as? URL
+//        let imageUrl2 = info[UIImagePickerControllerPHAsset] as? PHAsset
+//
+//        print("imageUrl", imageUrl as Any)
+//        print("imageUrl2", imageUrl2 as Any)
         //ボタンの背景に選択した画像を設定
         photoImageButton.setImage(image, for: UIControlState())
         self.dismiss(animated: true, completion: nil)
@@ -98,10 +103,26 @@ class InfomationViewController: UIViewController,UITextFieldDelegate, NSFetchedR
         // 先ほど定義したTask型データのname、categoryプロパティに入力、選択したデータを代入します。
         event.artist = artiststr
         //Documentsディレクトリのpathを得る（返り値はArrayで、index0がそれ）
-        //let docPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
+        let docPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
         //StringにappendingPathComponentがないのでURLに変換
-        //        let fileURL = URL(fileURLWithPath: docPath).appendingPathComponent(artiststr!)
-        //        event.image =
+        let fileURL = URL(fileURLWithPath: docPath).appendingPathComponent(artiststr!)
+        //JPGに変換
+        var imageData:Data?
+        if let image  = image {
+           imageData = UIImageJPEGRepresentation(image, 1.0)
+        }else{
+            
+        }
+        //画像書き込み（URLのpathを引数に）
+        //write(to:)はエラーを投げる関数なので、do-catch文が必要
+        do {
+            //do-catchを使ってるので書込みエラーが起きるとcatchに移ってくれる
+            try imageData?.write(to: fileURL, options: .atomic)
+            //書き込み成功時の処理
+        } catch let error {
+           //書き込み失敗時の処理
+            print("画像保存失敗 \(error)")
+        }
         // 上で作成したデータをデータベースに保存します。
         (UIApplication.shared.delegate as! AppDelegate).saveContext()
         self.navigationController?.popViewController(animated: true)

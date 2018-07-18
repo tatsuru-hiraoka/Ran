@@ -24,8 +24,6 @@ class InfomationViewController: UIViewController,UITextFieldDelegate, NSFetchedR
             return
         }
         managedContext = appDelegate.persistentContainer.viewContext
-        
-        
     }
     
     override func viewDidLayoutSubviews() {
@@ -110,8 +108,6 @@ class InfomationViewController: UIViewController,UITextFieldDelegate, NSFetchedR
         var imageData:Data?
         if let image  = image {
            imageData = UIImageJPEGRepresentation(image, 1.0)
-        }else{
-            
         }
         //画像書き込み（URLのpathを引数に）
         //write(to:)はエラーを投げる関数なので、do-catch文が必要

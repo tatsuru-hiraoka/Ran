@@ -23,21 +23,21 @@ class EditViewController: UIViewController {
     }
     
     @IBAction func selectImage(_ sender: Any) {
-        PhotoRequestManager.requestPhotoLibrary(self){ [weak self] result in
-            switch result {
-            case .success(let image):
-                self?.setImage(image)
-            case .faild:
-                print("failed")
-            case .cancel:
-                break
-            }
-        }
+//        PhotoRequestManager.requestPhotoLibrary(self){ [weak self] result in
+//            switch result {
+//            case .success(let image):
+//                self?.setImage(image)
+//            case .faild:
+//                print("failed")
+//            case .cancel:
+//                break
+//            }
+//        }
     }
     
     // 取得した画像をセットするメソッド
     private func setImage(_ image: UIImage) {
-        photoImageButton.setImage(image, for: UIControlState())
+        //photoImageButton.setImage(image, for: UIControlState())
     }
     
     

@@ -9,11 +9,10 @@
 /* Begin PBXBuildFile section */
 		379FC53B20EA68A800C4E199 /* TableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 379FC53A20EA68A800C4E199 /* TableViewController.swift */; };
 		379FC53D20EA690C00C4E199 /* EditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 379FC53C20EA690C00C4E199 /* EditViewController.swift */; };
-		379FC53F20EAC03F00C4E199 /* PhotoRequestManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 379FC53E20EAC03F00C4E199 /* PhotoRequestManager.swift */; };
-		379FC54120EAC09900C4E199 /* PhotoAuthorization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 379FC54020EAC09900C4E199 /* PhotoAuthorization.swift */; };
 		37D4000020DFC0360047D88B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 37D4FFFF20DFC0360047D88B /* Assets.xcassets */; };
 		37D4000320DFC0370047D88B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 37D4000120DFC0370047D88B /* LaunchScreen.storyboard */; };
 		37D4000B20E198550047D88B /* InformationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37D4000A20E198550047D88B /* InformationViewController.swift */; };
+		37D400B520FE160C0060EF94 /* SongListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37D400B420FE160C0060EF94 /* SongListViewController.swift */; };
 		37D4FFF420DFC0330047D88B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37D4FFF320DFC0330047D88B /* AppDelegate.swift */; };
 		37D4FFF720DFC0330047D88B /* Ran.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 37D4FFF520DFC0330047D88B /* Ran.xcdatamodeld */; };
 		37D4FFF920DFC0330047D88B /* MasterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37D4FFF820DFC0330047D88B /* MasterViewController.swift */; };
@@ -24,11 +23,10 @@
 /* Begin PBXFileReference section */
 		379FC53A20EA68A800C4E199 /* TableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewController.swift; sourceTree = "<group>"; };
 		379FC53C20EA690C00C4E199 /* EditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditViewController.swift; sourceTree = "<group>"; };
-		379FC53E20EAC03F00C4E199 /* PhotoRequestManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoRequestManager.swift; sourceTree = "<group>"; };
-		379FC54020EAC09900C4E199 /* PhotoAuthorization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoAuthorization.swift; sourceTree = "<group>"; };
 		37D4000220DFC0370047D88B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		37D4000420DFC0370047D88B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		37D4000A20E198550047D88B /* InformationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InformationViewController.swift; sourceTree = "<group>"; };
+		37D400B420FE160C0060EF94 /* SongListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongListViewController.swift; sourceTree = "<group>"; };
 		37D4FFF020DFC0330047D88B /* Ran.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Ran.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		37D4FFF320DFC0330047D88B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		37D4FFF620DFC0330047D88B /* Ran.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Ran.xcdatamodel; sourceTree = "<group>"; };
@@ -72,10 +70,9 @@
 				37D4FFF820DFC0330047D88B /* MasterViewController.swift */,
 				37D4FFFA20DFC0330047D88B /* DetailViewController.swift */,
 				37D4000A20E198550047D88B /* InformationViewController.swift */,
+				37D400B420FE160C0060EF94 /* SongListViewController.swift */,
 				379FC53A20EA68A800C4E199 /* TableViewController.swift */,
 				379FC53C20EA690C00C4E199 /* EditViewController.swift */,
-				379FC53E20EAC03F00C4E199 /* PhotoRequestManager.swift */,
-				379FC54020EAC09900C4E199 /* PhotoAuthorization.swift */,
 				37D4FFFC20DFC0330047D88B /* Main.storyboard */,
 				37D4FFFF20DFC0360047D88B /* Assets.xcassets */,
 				37D4000120DFC0370047D88B /* LaunchScreen.storyboard */,
@@ -157,9 +154,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				37D4FFF420DFC0330047D88B /* AppDelegate.swift in Sources */,
-				379FC54120EAC09900C4E199 /* PhotoAuthorization.swift in Sources */,
+				37D400B520FE160C0060EF94 /* SongListViewController.swift in Sources */,
 				379FC53B20EA68A800C4E199 /* TableViewController.swift in Sources */,
-				379FC53F20EAC03F00C4E199 /* PhotoRequestManager.swift in Sources */,
 				37D4FFF720DFC0330047D88B /* Ran.xcdatamodeld in Sources */,
 				37D4FFF920DFC0330047D88B /* MasterViewController.swift in Sources */,
 				37D4FFFB20DFC0330047D88B /* DetailViewController.swift in Sources */,

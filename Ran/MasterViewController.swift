@@ -66,9 +66,13 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         let event = fetchedResultsController.object(at: indexPath)//events[indexPath.row]//
         let titleLabel:UILabel = cell.viewWithTag(2) as! UILabel
         titleLabel.text = event.artist
+        if let detailItem = event.image {
+            let titleImage:UIImageView = cell.viewWithTag(1) as! UIImageView
+            titleImage.image = UIImage(contentsOfFile: detailItem.path)
+        }else{
+            
+        }
         
-        let titleImage:UIImageView = cell.viewWithTag(1) as! UIImageView
-        titleImage.image = UIImage(contentsOfFile: (event.image?.path)!)
         return cell
     }
 

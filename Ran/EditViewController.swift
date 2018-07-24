@@ -7,14 +7,22 @@
 //
 
 import UIKit
+import CoreData
 
-class EditViewController: UIViewController {
+class EditViewController: UIViewController, UITextFieldDelegate {
 
-    @IBOutlet weak var photoImageButton: UIButton!
+    @IBOutlet weak var scroll: UIScrollView!
+    let detailItem = Event()
+    @IBOutlet weak var titletextField: UITextField!
+    let textField = UITextField()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        textField.delegate = self
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
+            return
+        }
+        //managedContext = appDelegate.persistentContainer.viewContext
     }
 
     override func didReceiveMemoryWarning() {
@@ -22,33 +30,46 @@ class EditViewController: UIViewController {
         
     }
     
-    @IBAction func selectImage(_ sender: Any) {
-//        PhotoRequestManager.requestPhotoLibrary(self){ [weak self] result in
-//            switch result {
-//            case .success(let image):
-//                self?.setImage(image)
-//            case .faild:
-//                print("failed")
-//            case .cancel:
-//                break
-//            }
+    override func viewDidLayoutSubviews() {
+        scroll.contentSize = CGSize(width: 0, height: 1100)
+    }
+    
+    //完了を押すとkeyboardを閉じる処理
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        if UIDevice.current.userInterfaceIdiom == .phone {
+            let y:Int = Int(textField.frame.origin.y)
+            let scrollpoint:CGPoint = CGPoint(x:0,y:y-440)
+            scroll.contentOffset = scrollpoint
+        }
+        textField.resignFirstResponder()
+        return true
+    }
+    
+    //keyboard以外の画面を押すと、keyboardを閉じる処理
+//    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+//        if (self.textfield.isFirstResponder) {
+//            self.textfield.resignFirstResponder()
 //        }
+//    }
+    
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        if UIDevice.current.userInterfaceIdiom == .phone {
+            let y:Int = Int(textField.frame.origin.y)
+            let scrollpoint:CGPoint = CGPoint(x:0,y:y-100)
+            scroll.contentOffset = scrollpoint
+        }
     }
-    
-    // 取得した画像をセットするメソッド
-    private func setImage(_ image: UIImage) {
-        //photoImageButton.setImage(image, for: UIControlState())
-    }
-    
-    
-    /*
-    // MARK: - Navigation
 
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+    @IBAction func save(_ sender: Any) {
+        //let event = detailItem
+        self.detailItem.title = titletextField.text
+        //event.title = titletextField.text
+        
+        (UIApplication.shared.delegate as! AppDelegate).saveContext()
+        self.navigationController?.popViewController(animated: true)
     }
-    */
-
+    
+    @IBAction func cancel(_ sender: Any) {
+        self.navigationController?.popViewController(animated: true)
+    }
 }

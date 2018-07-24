@@ -54,11 +54,6 @@ class InfomationViewController: UIViewController,UITextFieldDelegate, NSFetchedR
     //画像が選択された時に呼ばれる.
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         image = info[UIImagePickerControllerOriginalImage] as? UIImage
-//        let imageUrl = info[UIImagePickerControllerReferenceURL] as? URL
-//        let imageUrl2 = info[UIImagePickerControllerPHAsset] as? PHAsset
-//
-//        print("imageUrl", imageUrl as Any)
-//        print("imageUrl2", imageUrl2 as Any)
         //ボタンの背景に選択した画像を設定
         photoImageButton.setImage(image, for: UIControlState())
         self.dismiss(animated: true, completion: nil)
@@ -98,12 +93,12 @@ class InfomationViewController: UIViewController,UITextFieldDelegate, NSFetchedR
     @IBAction func save(_ sender: Any) {
         let event = Event(context: managedContext!)
         let artiststr = textfield.text
-        // 先ほど定義したTask型データのname、categoryプロパティに入力、選択したデータを代入します。
+        
         event.artist = artiststr
         //Documentsディレクトリのpathを得る（返り値はArrayで、index0がそれ）
         let docPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
         //StringにappendingPathComponentがないのでURLに変換
-        let fileURL = URL(fileURLWithPath: docPath).appendingPathComponent(artiststr!)
+        let fileURL = URL(fileURLWithPath: docPath).appendingPathComponent(artiststr!+".jpg")
         //JPGに変換
         var imageData:Data?
         if let image  = image {
@@ -114,13 +109,10 @@ class InfomationViewController: UIViewController,UITextFieldDelegate, NSFetchedR
         do {
             //do-catchを使ってるので書込みエラーが起きるとcatchに移ってくれる
             try imageData?.write(to: fileURL, options: .atomic)
-            //書き込み成功時の処理
             event.image = fileURL
         } catch let error {
-           //書き込み失敗時の処理
             print("画像保存失敗 \(error)")
         }
-        // 上で作成したデータをデータベースに保存します。
         (UIApplication.shared.delegate as! AppDelegate).saveContext()
         self.navigationController?.popViewController(animated: true)
     }

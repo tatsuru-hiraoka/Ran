@@ -11,7 +11,6 @@ import CoreData
 
 class MasterViewController: UITableViewController, NSFetchedResultsControllerDelegate {
 
-    
     var detailViewController: DetailViewController? = nil
     var managedObjectContext: NSManagedObjectContext? = nil
     //var events:[Event] = []
@@ -66,13 +65,14 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         let event = fetchedResultsController.object(at: indexPath)//events[indexPath.row]//
         let titleLabel:UILabel = cell.viewWithTag(2) as! UILabel
         titleLabel.text = event.artist
-        if let detailItem = event.image {
+        if let artistImage = UIImage(contentsOfFile: (event.image?.path)!) {
+            print("detailItem")
             let titleImage:UIImageView = cell.viewWithTag(1) as! UIImageView
-            titleImage.image = UIImage(contentsOfFile: detailItem.path)
-        }else{
+            titleImage.image = artistImage
             
+        }else{
+            //print("default")
         }
-        
         return cell
     }
 
@@ -102,7 +102,7 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
     // Cell の高さを120にする
     override func tableView(_ table: UITableView,
                    heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 120.0
+        return 130.0
     }
 
     // MARK: - Fetched results controller

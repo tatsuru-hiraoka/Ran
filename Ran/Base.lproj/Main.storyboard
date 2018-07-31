@@ -6,6 +6,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <capability name="Navigation items with more than one left or right bar item" minToolsVersion="7.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -218,9 +219,6 @@
                                     </subviews>
                                 </tableViewCellContentView>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <connections>
-                                    <segue destination="gda-Gg-5gk" kind="show" id="lmP-jQ-EBA"/>
-                                </connections>
                             </tableViewCell>
                         </prototypes>
                         <sections/>
@@ -237,6 +235,9 @@
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <connections>
+                        <segue destination="gda-Gg-5gk" kind="show" identifier="MasterToSongList" id="rNS-nN-JKY"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Rux-fX-hf1" sceneMemberID="firstResponder"/>
             </objects>
@@ -354,7 +355,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                         </tableViewCellContentView>
                                         <connections>
-                                            <segue destination="vC3-pB-5Vb" kind="show" id="5kP-Pw-xuz"/>
+                                            <segue destination="vC3-pB-5Vb" kind="show" identifier="SongToDetail" id="5kP-Pw-xuz"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -372,9 +373,22 @@
                         <viewLayoutGuide key="safeArea" id="one-HX-GRH"/>
                     </view>
                     <navigationItem key="navigationItem" title="Title" id="DaY-as-sSA">
+                        <leftBarButtonItems>
+                            <barButtonItem systemItem="cancel" id="49e-5X-Dh8">
+                                <connections>
+                                    <action selector="cancel:" destination="gda-Gg-5gk" id="wd4-Vh-VqI"/>
+                                </connections>
+                            </barButtonItem>
+                            <barButtonItem systemItem="edit" id="mmk-Hu-NF3">
+                                <connections>
+                                    <action selector="edit:" destination="gda-Gg-5gk" id="Bep-3G-URv"/>
+                                </connections>
+                            </barButtonItem>
+                        </leftBarButtonItems>
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="Wax-u2-IMl">
                             <connections>
-                                <segue destination="gyS-Sb-7BG" kind="show" id="gef-uI-R3M"/>
+                                <action selector="add:" destination="gda-Gg-5gk" id="7pz-Cv-PrE"/>
+                                <segue destination="gyS-Sb-7BG" kind="show" identifier="SongToEdit" id="QHf-kE-fJF"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -386,7 +400,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="B9E-OF-Lai" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1740.5797101449277" y="-1424.1847826086957"/>
+            <point key="canvasLocation" x="1761" y="-1498"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="r7l-gg-dq7">
@@ -410,6 +424,6 @@
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="5kP-Pw-xuz"/>
-        <segue reference="gef-uI-R3M"/>
+        <segue reference="QHf-kE-fJF"/>
     </inferredMetricsTieBreakers>
 </document>

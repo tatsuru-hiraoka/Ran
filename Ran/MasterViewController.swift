@@ -13,6 +13,8 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
 
     var detailViewController: DetailViewController? = nil
     var managedObjectContext: NSManagedObjectContext? = nil
+    var artiststr:String?
+    var imageurl:URL?
     //var events:[Event] = []
 
     override func viewDidLoad() {
@@ -37,17 +39,17 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
 
     // MARK: - Segues
 
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "showDetail" {
-            if let indexPath = tableView.indexPathForSelectedRow {
-            let object = fetchedResultsController.object(at: indexPath)
-                let controller = (segue.destination as! UINavigationController).topViewController as! DetailViewController
-                controller.detailItem = object
-                controller.navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
-                controller.navigationItem.leftItemsSupplementBackButton = true
-            }
-        }
-    }
+//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+//        if segue.identifier == "showDetail" {
+//            if let indexPath = tableView.indexPathForSelectedRow {
+//            let object = fetchedResultsController.object(at: indexPath)
+//                let controller = (segue.destination as! UINavigationController).topViewController as! DetailViewController
+//                controller.detailItem = object
+//                controller.navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
+//                controller.navigationItem.leftItemsSupplementBackButton = true
+//            }
+//        }
+//    }
 
     // MARK: - Table View
 
@@ -71,13 +73,39 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
             titleImage.image = artistImage
             
         }else{
-            //print("default")
+            print("default")
         }
         return cell
     }
+    
+    //Cellが選択されたら
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let event = fetchedResultsController.object(at: indexPath)
+        artiststr = event.artist
+        imageurl = event.image
+        print(artiststr!)
+        if artiststr != nil {
+            // SubViewController へ遷移するために Segue を呼び出す
+            performSegue(withIdentifier: "MasterToSongList",sender: nil)
+        }
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        guard let identifier = segue.identifier else {
+            // identifierが取れなかったら処理やめる
+            return
+        }
+        if(identifier == "MasterToSongList") {
+            // segueから遷移先のNavigationControllerを取得
+            let nc = segue.destination as! SongListViewController
+            // 次画面のテキスト表示用のStringに、本画面のテキストフィールドのテキストを入れる
+            nc.labelstr = artiststr!
+            //nc.imageView.image = UIImage(contentsOfFile: (imageurl?.path)!)
+            nc.imageUrl = imageurl
+        }
+    }
 
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
         return true
     }
 

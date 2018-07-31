@@ -14,6 +14,10 @@ class SongListViewController: UIViewController, UITableViewDelegate, UITableView
     @IBOutlet weak var songTitleLabel: UILabel!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var imageView: UIImageView!
+    var labelstr:String?
+    var imageUrl:URL?
+    var artiststr:String?
+    var imageurl:URL?
     //var managedObjectContext: NSManagedObjectContext? = nil
     var events:[Event] = []
     
@@ -25,6 +29,14 @@ class SongListViewController: UIViewController, UITableViewDelegate, UITableView
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        songTitleLabel.text = labelstr
+        if let artistUrl = imageUrl {
+            print("detailItem")
+            imageView.image = UIImage(contentsOfFile: artistUrl.path)
+            
+        }else{
+            print("default")
+        }
     }
 
     override func didReceiveMemoryWarning() {
@@ -68,8 +80,48 @@ class SongListViewController: UIViewController, UITableViewDelegate, UITableView
             print("Fetching Failed.")
         }
     }
+    
+    @IBAction func add(_ sender: Any) {
+        if artiststr != nil {
+            // SubViewController へ遷移するために Segue を呼び出す
+            performSegue(withIdentifier: "SongToEdit",sender: nil)
+        }
+    }
+    //Cellが選択されたら
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let event = events[indexPath.row]
+        artiststr = event.artist
+        imageurl = event.image
+        print(artiststr!)
+//        if artiststr != nil {
+//            // SubViewController へ遷移するために Segue を呼び出す
+//            performSegue(withIdentifier: "SongToDetail",sender: nil)
+//        }
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        guard let identifier = segue.identifier else {
+            // identifierが取れなかったら処理やめる
+            print("identifierが取れなかったら処理やめる")
+            return
+        }
+        if(identifier == "SongToEdit") {
+            // segueから遷移先のNavigationControllerを取得
+            let vc = segue.destination as! EditViewController
+            // 次画面のテキスト表示用のStringに、本画面のテキストフィールドのテキストを入れる
+            vc.labelstr = self.labelstr
+            //nc.imageView.image = UIImage(contentsOfFile: (imageurl?.path)!)
+            vc.imageUrl = self.imageUrl
+        }
+    }
 
     
+    @IBAction func cancel(_ sender: Any) {
+        self.navigationController?.popViewController(animated: true)
+    }
+    
+    @IBAction func edit(_ sender: Any) {
+    }
     /*var fetchedResultsController: NSFetchedResultsController<Event> {
         if _fetchedResultsController != nil {
             return _fetchedResultsController!

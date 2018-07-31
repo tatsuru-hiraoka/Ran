@@ -14,15 +14,22 @@ class EditViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var scroll: UIScrollView!
     let detailItem = Event()
     @IBOutlet weak var titletextField: UITextField!
+    var managedContext: NSManagedObjectContext? = nil
     let textField = UITextField()
+    var labelstr:String?
+    var imageUrl:URL?
+    var artistUrl:URL?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         textField.delegate = self
+        self.title = labelstr
+        //let str:String = labelstr!
+        artistUrl = imageUrl
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
             return
         }
-        //managedContext = appDelegate.persistentContainer.viewContext
+        managedContext = appDelegate.persistentContainer.viewContext
     }
 
     override func didReceiveMemoryWarning() {
@@ -61,8 +68,11 @@ class EditViewController: UIViewController, UITextFieldDelegate {
     }
 
     @IBAction func save(_ sender: Any) {
+        let event = Event(context: managedContext!)
         //let event = detailItem
-        self.detailItem.title = titletextField.text
+        event.artist = labelstr
+        event.image = artistUrl
+        event.title = titletextField.text
         //event.title = titletextField.text
         
         (UIApplication.shared.delegate as! AppDelegate).saveContext()

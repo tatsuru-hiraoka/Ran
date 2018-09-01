@@ -18,14 +18,8 @@ class SongListViewController: UIViewController, UITableViewDelegate, UITableView
     var imageUrl:URL?
     var artiststr:String?
     var imageurl:URL?
-    //var managedObjectContext: NSManagedObjectContext? = nil
-    var events:[Event] = []
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        getData()
-        tableView.reloadData()
-    }
+    var context:NSManagedObjectContext?
+    var titles:[String] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,6 +31,25 @@ class SongListViewController: UIViewController, UITableViewDelegate, UITableView
         }else{
             print("default")
         }
+        // データ保存時と同様にcontextを定義
+        context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+        print(#function)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        var strArray:[String] = []
+        for song in getData().song! {
+            if ((song as! Song).title != nil){
+               // if !strArray.contains(Artist.title!) {
+                strArray.append((song as! Song).title!)
+                //}
+            }
+        }
+        titles = strArray
+        //print(titles.count)
+        tableView.reloadData()
+        print(#function,titles.count)
     }
 
     override func didReceiveMemoryWarning() {
@@ -50,35 +63,42 @@ class SongListViewController: UIViewController, UITableViewDelegate, UITableView
 //            NSLayoutConstraint(item: imageView, attribute: .width, relatedBy: .equal, toItem: self.view, attribute: .width, multiplier: 0.35, constant: 0)
 //        ])
         songTitleLabel.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 240.0).isActive = true
-        print("Width=",imageView.frame.size.width)
+        //print("Width=",imageView.frame.size.width)
     }
     
-//    func numberOfSections(in tableView: UITableView) -> Int {
-//        return fetchedResultsController.sections?.count ?? 0
-//    }
+    func getData() -> Artist {
+        var artists:[Artist] = []
+        do {
+            // CoreDataからデータをfetchしてArtistsに格納
+            let fetchRequest: NSFetchRequest<Artist> = Artist.fetchRequest()
+            fetchRequest.predicate = NSPredicate(format: "artistName = %@", labelstr!)
+            artists = (try context?.fetch(fetchRequest))!
+        } catch {
+            print("Fetching Failed.")
+        }
+        print(#function)
+        return artists[0]
+    }
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        print(#function)
+        return fetchedResultsController.sections?.count ?? 0
+    }
     //Table Viewのセルの数を指定
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         //let sectionInfo = fetchedResultsController.sections![section]
-        return events.count//sectionInfo.numberOfObjects
+        print("titles.count",titles.count)
+        print(#function)
+        return titles.count//sectionInfo.numberOfObjects
     }
     //セルに値を設定するデータソースメソッド（必須）
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
-        let event = events[indexPath.row]//
-        cell.textLabel!.text = event.title
+        //let Artist = titles[indexPath.row]//
+        cell.textLabel!.text = titles[indexPath.row]
+        print(titles[indexPath.row])
+        print(#function)
         return cell
-    }
-    
-    func getData() {
-        // データ保存時と同様にcontextを定義
-        let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
-        do {
-            // CoreDataからデータをfetchしてeventsに格納
-            let fetchRequest: NSFetchRequest<Event> = Event.fetchRequest()
-            events = try context.fetch(fetchRequest)
-        } catch {
-            print("Fetching Failed.")
-        }
     }
     
     @IBAction func add(_ sender: Any) {
@@ -89,10 +109,10 @@ class SongListViewController: UIViewController, UITableViewDelegate, UITableView
     }
     //Cellが選択されたら
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let event = events[indexPath.row]
-        artiststr = event.artist
-        imageurl = event.image
-        print(artiststr!)
+//        let Artist = Artists[indexPath.row]
+//        artiststr = Artist.artist
+//        imageurl = Artist.image
+//        print(artiststr!)
 //        if artiststr != nil {
 //            // SubViewController へ遷移するために Segue を呼び出す
 //            performSegue(withIdentifier: "SongToDetail",sender: nil)
@@ -116,30 +136,30 @@ class SongListViewController: UIViewController, UITableViewDelegate, UITableView
     }
 
     
-    @IBAction func cancel(_ sender: Any) {
-        self.navigationController?.popViewController(animated: true)
-    }
+//    @IBAction func cancel(_ sender: Any) {
+//        self.navigationController?.popViewController(animated: true)
+//    }
     
-    @IBAction func edit(_ sender: Any) {
+
+    override func setEditing(_ editing: Bool, animated: Bool) {
+        super.setEditing(editing, animated: animated)
+        tableView.setEditing(editing, animated: animated)
+        print(#function)
     }
-    /*var fetchedResultsController: NSFetchedResultsController<Event> {
+    var fetchedResultsController: NSFetchedResultsController<Song> {
         if _fetchedResultsController != nil {
             return _fetchedResultsController!
         }
+        print(#function)
+        let fetchRequest: NSFetchRequest<Song> = Song.fetchRequest()
         
-        let fetchRequest: NSFetchRequest<Event> = Event.fetchRequest()
-        
-        // Set the batch size to a suitable number.
         fetchRequest.fetchBatchSize = 20
         
-        // Edit the sort key as appropriate.
         let sortDescriptor = NSSortDescriptor(key: "title", ascending: false)
         
         fetchRequest.sortDescriptors = [sortDescriptor]
         
-        // Edit the section name key path and cache name if appropriate.
-        // nil for section name key path means "no sections".
-        let aFetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: self.managedObjectContext!, sectionNameKeyPath: nil, cacheName: "Master")
+        let aFetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: self.context!, sectionNameKeyPath: nil, cacheName: "Master")
         aFetchedResultsController.delegate = self
         _fetchedResultsController = aFetchedResultsController
         
@@ -152,10 +172,11 @@ class SongListViewController: UIViewController, UITableViewDelegate, UITableView
         
         return _fetchedResultsController!
     }
-    var _fetchedResultsController: NSFetchedResultsController<Event>? = nil
+    var _fetchedResultsController: NSFetchedResultsController<Song>? = nil
     
     func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         tableView.beginUpdates()
+        print(#function)
     }
     
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange sectionInfo: NSFetchedResultsSectionInfo, atSectionIndex sectionIndex: Int, for type: NSFetchedResultsChangeType) {
@@ -167,6 +188,7 @@ class SongListViewController: UIViewController, UITableViewDelegate, UITableView
         default:
             return
         }
+        print(#function)
     }
     
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
@@ -176,19 +198,22 @@ class SongListViewController: UIViewController, UITableViewDelegate, UITableView
         case .delete:
             tableView.deleteRows(at: [indexPath!], with: .fade)
         case .update:
-            configureCell(tableView.cellForRow(at: indexPath!)!, withEvent: anObject as! Event)
+            break
+            //configureCell(tableView.cellForRow(at: indexPath!)!, withArtist: anObject as! Song)
         case .move:
-            configureCell(tableView.cellForRow(at: indexPath!)!, withEvent: anObject as! Event)
+            configureCell(tableView.cellForRow(at: indexPath!)!, withArtist: anObject as! Song)
             tableView.moveRow(at: indexPath!, to: newIndexPath!)
         }
+        print(#function)
     }
     //tebleViewを更新する
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         tableView.endUpdates()
+        print(#function)
     }
     
-    func configureCell(_ cell: UITableViewCell, withEvent event: Event) {
-        //cell.textLabel!.text = event.timestamp!.description
-        print("configureCell")
-    }*/
+    func configureCell(_ cell: UITableViewCell, withArtist Artist: Song) {
+        //cell.textLabel!.text = Artist.timestamp!.description
+        print(#function)
+    }
 }

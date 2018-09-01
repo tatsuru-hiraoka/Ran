@@ -15,7 +15,7 @@ class DetailViewController: UIViewController {
 
     func configureView() {
         if let detail = detailItem {
-            navigationController?.title = detail.artist!.description
+            navigationController?.title = detail.artistName!.description
         }
     }
 
@@ -30,7 +30,7 @@ class DetailViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
 
-    var detailItem: Event? {
+    var detailItem: Artist? {
         didSet {
             // Update the view.
             configureView()

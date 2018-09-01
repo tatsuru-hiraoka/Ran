@@ -15,11 +15,11 @@ class TableViewController: UITableViewController,NSFetchedResultsControllerDeleg
     
     func configureView() {
         if let detail = detailItem {
-            navigationController?.title = detail.artist!.description
+            navigationController?.title = detail.artistName!.description
         }
     }
     
-    var detailItem: Event? {
+    var detailItem: Artist? {
         didSet {
             // Update the view.
             configureView()
@@ -56,10 +56,10 @@ class TableViewController: UITableViewController,NSFetchedResultsControllerDeleg
     //セルに値を設定するデータソースメソッド（必須）
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
-        let event = fetchedResultsController.object(at: indexPath)//events[indexPath.row]//
+        let artist = fetchedResultsController.object(at: indexPath)//Artists[indexPath.row]//
         let titleLabel:UILabel = cell.viewWithTag(2) as! UILabel
-        titleLabel.text = event.artist
-        if let detailItem = event.image {
+        titleLabel.text = artist.artistName
+        if let detailItem = artist.image {
             let titleImage:UIImageView = cell.viewWithTag(1) as! UIImageView
             titleImage.image = UIImage(contentsOfFile: detailItem.path)
         }
@@ -120,12 +120,12 @@ class TableViewController: UITableViewController,NSFetchedResultsControllerDeleg
         // Pass the selected object to the new view controller.
     }
     */
-    var fetchedResultsController: NSFetchedResultsController<Event> {
+    var fetchedResultsController: NSFetchedResultsController<Artist> {
         if _fetchedResultsController != nil {
             return _fetchedResultsController!
         }
         
-        let fetchRequest: NSFetchRequest<Event> = Event.fetchRequest()
+        let fetchRequest: NSFetchRequest<Artist> = Artist.fetchRequest()
         
         fetchRequest.fetchBatchSize = 20
         
@@ -148,7 +148,7 @@ class TableViewController: UITableViewController,NSFetchedResultsControllerDeleg
         
         return _fetchedResultsController!
     }
-    var _fetchedResultsController: NSFetchedResultsController<Event>? = nil
+    var _fetchedResultsController: NSFetchedResultsController<Artist>? = nil
     
     func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         tableView.beginUpdates()
@@ -172,9 +172,9 @@ class TableViewController: UITableViewController,NSFetchedResultsControllerDeleg
         case .delete:
             tableView.deleteRows(at: [indexPath!], with: .fade)
         case .update:
-            configureCell(tableView.cellForRow(at: indexPath!)!, withEvent: anObject as! Event)
+            configureCell(tableView.cellForRow(at: indexPath!)!, withArtist: anObject as! Artist)
         case .move:
-            configureCell(tableView.cellForRow(at: indexPath!)!, withEvent: anObject as! Event)
+            configureCell(tableView.cellForRow(at: indexPath!)!, withArtist: anObject as! Artist)
             tableView.moveRow(at: indexPath!, to: newIndexPath!)
         }
     }
@@ -183,7 +183,7 @@ class TableViewController: UITableViewController,NSFetchedResultsControllerDeleg
         tableView.endUpdates()
     }
     
-    func configureCell(_ cell: UITableViewCell, withEvent event: Event) {
-        cell.textLabel!.text = event.title!.description
+    func configureCell(_ cell: UITableViewCell, withArtist artist: Artist) {
+        //cell.textLabel!.text = artist.title!.description
     }
 }

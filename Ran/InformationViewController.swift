@@ -76,7 +76,7 @@ class InfomationViewController: UIViewController,UITextFieldDelegate, NSFetchedR
     }
     
     //keyboard以外の画面を押すと、keyboardを閉じる処理
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+    override func touchesBegan(_ touches: Set<UITouch>, with Artist: UIEvent?) {
         if (self.textfield.isFirstResponder) {
             self.textfield.resignFirstResponder()
         }
@@ -91,10 +91,10 @@ class InfomationViewController: UIViewController,UITextFieldDelegate, NSFetchedR
     }
     
     @IBAction func save(_ sender: Any) {
-        let event = Event(context: managedContext!)
+        let artist = Artist(context: managedContext!)
         let artiststr = textfield.text
         
-        event.artist = artiststr
+        artist.artistName = artiststr
         //Documentsディレクトリのpathを得る（返り値はArrayで、index0がそれ）
         let docPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
         //StringにappendingPathComponentがないのでURLに変換
@@ -109,7 +109,7 @@ class InfomationViewController: UIViewController,UITextFieldDelegate, NSFetchedR
         do {
             //do-catchを使ってるので書込みエラーが起きるとcatchに移ってくれる
             try imageData?.write(to: fileURL, options: .atomic)
-            event.image = fileURL
+            artist.image = fileURL
         } catch let error {
             print("画像保存失敗 \(error)")
         }

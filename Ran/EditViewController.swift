@@ -12,13 +12,15 @@ import CoreData
 class EditViewController: UIViewController, UITextFieldDelegate {
 
     @IBOutlet weak var scroll: UIScrollView!
-    let detailItem = Event()
+    //let detailItem = Artist()
     @IBOutlet weak var titletextField: UITextField!
-    var managedContext: NSManagedObjectContext? = nil
+    var managedObjectContext: NSManagedObjectContext? = nil
     let textField = UITextField()
     var labelstr:String?
     var imageUrl:URL?
     var artistUrl:URL?
+    var artist:Artist!
+    var songs = [Song]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,7 +31,7 @@ class EditViewController: UIViewController, UITextFieldDelegate {
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
             return
         }
-        managedContext = appDelegate.persistentContainer.viewContext
+        managedObjectContext = appDelegate.persistentContainer.viewContext
     }
 
     override func didReceiveMemoryWarning() {
@@ -53,7 +55,7 @@ class EditViewController: UIViewController, UITextFieldDelegate {
     }
     
     //keyboard以外の画面を押すと、keyboardを閉じる処理
-//    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+//    override func touchesBegan(_ touches: Set<UITouch>, with event: UIArtist?) {
 //        if (self.textfield.isFirstResponder) {
 //            self.textfield.resignFirstResponder()
 //        }
@@ -68,12 +70,25 @@ class EditViewController: UIViewController, UITextFieldDelegate {
     }
 
     @IBAction func save(_ sender: Any) {
-        let event = Event(context: managedContext!)
+        //let artist = Artist(context: managedObjectContext!)
         //let event = detailItem
-        event.artist = labelstr
-        event.image = artistUrl
-        event.title = titletextField.text
+        //artist.artistName = labelstr
+        //artist.image = artistUrl
+        //artist.title = titletextField.text
         //event.title = titletextField.text
+        let song = Song(context: managedObjectContext!)
+        song.title = titletextField.text
+        
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Artist")
+        fetchRequest.predicate = NSPredicate(format: "artistName = %@", labelstr!)
+        do {
+            let result =  try managedObjectContext?.fetch(fetchRequest) as? [Artist]
+            if(result!.count > 0) {
+              song.artists = result![0]
+            }
+        } catch let error {
+            print(error)
+        }
         
         (UIApplication.shared.delegate as! AppDelegate).saveContext()
         self.navigationController?.popViewController(animated: true)

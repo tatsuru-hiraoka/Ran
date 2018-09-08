@@ -2,9 +2,13 @@
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14135" systemVersion="17G65" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="Artist" representedClassName="Artist" codeGenerationType="class">
         <attribute name="artistName" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="image" optional="YES" attributeType="URI" syncable="YES"/>
-        <relationship name="song" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Song" inverseName="artists" inverseEntity="Song" syncable="YES"/>
+        <relationship name="photo" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="Photo" inverseName="artist" inverseEntity="Photo" syncable="YES"/>
+        <relationship name="song" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Song" inverseName="artists" inverseEntity="Song" syncable="YES"/>
         <userInfo/>
+    </entity>
+    <entity name="Photo" representedClassName="Photo" syncable="YES" codeGenerationType="class">
+        <attribute name="image" optional="YES" attributeType="Binary" allowsExternalBinaryDataStorage="YES" syncable="YES"/>
+        <relationship name="artist" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Artist" inverseName="photo" inverseEntity="Artist" syncable="YES"/>
     </entity>
     <entity name="Song" representedClassName="Song" syncable="YES" codeGenerationType="class">
         <attribute name="composer" optional="YES" attributeType="String" syncable="YES"/>
@@ -14,7 +18,8 @@
         <relationship name="artists" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Artist" inverseName="song" inverseEntity="Artist" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Artist" positionX="-875" positionY="465" width="128" height="90"/>
+        <element name="Artist" positionX="-875" positionY="465" width="128" height="88"/>
         <element name="Song" positionX="-675" positionY="468" width="128" height="118"/>
+        <element name="Photo" positionX="-875" positionY="345" width="128" height="73"/>
     </elements>
 </model>

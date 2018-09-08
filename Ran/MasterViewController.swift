@@ -17,6 +17,7 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
     var artiststr:String?
     var imageurl:URL?
     //var Artists:[Artist] = []
+    var artist:Artist!
     var artists:[String] = []
     //var context:NSManagedObjectContext?
     
@@ -97,20 +98,23 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         if artists.count == 0 {
             return cell
         }
-        do {
-            let artistarray = try managedObjectContext?.fetch(fetchRequest)
-            if let artistImage = UIImage(contentsOfFile: (artistarray![0].image?.path)!) {
-                print("detailItem")
-                let titleImage:UIImageView = cell.viewWithTag(1) as! UIImageView
-                titleImage.image = artistImage
-                
-            }else{
-                print("default")
-            }
-        } catch {
-            let nserror = error as NSError
-            fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
+        if let data = artist.photo?.image {
+            photoImageView.image = UIImage(data:  data)
         }
+//        do {
+//            let artistarray = try managedObjectContext?.fetch(fetchRequest)
+//            if let artistImage = UIImage(contentsOfFile: (artistarray![0].image?.path)!) {
+//                print("detailItem")
+//                let titleImage:UIImageView = cell.viewWithTag(1) as! UIImageView
+//                titleImage.image = artistImage
+//
+//            }else{
+//                print("default")
+//            }
+//        } catch {
+//            let nserror = error as NSError
+//            fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
+//        }
         print(#function)
         return cell
     }
